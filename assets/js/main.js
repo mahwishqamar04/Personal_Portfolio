@@ -162,3 +162,85 @@
     });
 
 })(jQuery);
+
+/* STEP 8 — UI/UX SCROLL REVEAL */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const revealElements = document.querySelectorAll(
+        ".project-card, .service-card, .skill-card, .education-card, .certification-card, .experience-card, .about-card"
+    );
+
+    if (!revealElements.length) return;
+
+    if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+        return;
+    }
+
+    revealElements.forEach(function (element) {
+        element.classList.add("mq-reveal");
+    });
+
+    const observer = new IntersectionObserver(
+        function (entries, observerInstance) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("mq-reveal-visible");
+                    observerInstance.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12
+        }
+    );
+
+    revealElements.forEach(function (element) {
+        observer.observe(element);
+    });
+});
+
+
+/* STEP 8 — UI/UX SCROLL REVEAL */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const revealElements = document.querySelectorAll(
+        ".project-card, .service-card, .skill-card, .education-card, .certification-card, .experience-card, .about-card"
+    );
+
+    if (!revealElements.length) return;
+
+    if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+        return;
+    }
+
+    revealElements.forEach(function (element) {
+        element.classList.add("mq-reveal");
+    });
+
+    const observer = new IntersectionObserver(
+        function (entries, observerInstance) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("mq-reveal-visible");
+                    observerInstance.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12
+        }
+    );
+
+    revealElements.forEach(function (element) {
+        observer.observe(element);
+    });
+});
+

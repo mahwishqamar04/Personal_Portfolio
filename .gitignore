@@ -1,0 +1,30 @@
+﻿.env
+.env.*
+!.env.example
+
+# Local backups
+*_backup_*.css
+*_backup_*.js
+*_BACKUP_*
+*backup*
+
+# Diagnostic / test files
+test.php
+test_api_csrf_diag.php
+test_api_diag.php
+test_db_diag.php
+test_mysql_diag.php
+test_port_diag.php
+test_projects_diag.php
+debug.php
+*diag.php
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary files
+*.log
+*.tmp
