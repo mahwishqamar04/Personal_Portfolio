@@ -1,0 +1,53 @@
+# ============================================
+# Mehwish Qamar Portfolio - Apache Configuration
+# ============================================
+# Protects sensitive files from public access.
+# Compatible with Apache 2.4 / XAMPP.
+# ============================================
+
+# ---------- Block access to sensitive files ----------
+
+<FilesMatch "^\.env$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.env\.example$">
+    Require all denied
+</FilesMatch>
+
+# ---------- Block access to hidden files (dotfiles) ----------
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# ---------- Block access to database folder ----------
+
+RewriteEngine On
+RewriteRule ^database/ - [F,L]
+
+# ---------- Block access to sensitive file types ----------
+
+<FilesMatch "\.(sql|log|md|bak|conf|ini)$">
+    Require all denied
+</FilesMatch>
+
+# ---------- Prevent directory listing ----------
+
+Options -Indexes
+
+# ---------- Default index file ----------
+
+DirectoryIndex index.php index.html
+
+# ---------- Basic security headers ----------
+
+<IfModule mod_headers.c>
+
+    # Prevent browsers from MIME-sniffing
+    Header set X-Content-Type-Options "nosniff"
+
+    # Basic clickjacking protection
+    Header set X-Frame-Options "SAMEORIGIN"
+
+</IfModule>

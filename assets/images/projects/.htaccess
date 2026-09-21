@@ -1,0 +1,37 @@
+# ============================================
+# Project Images Upload Directory - Security
+# ============================================
+# Prevents PHP/code execution in upload folders.
+# Only allows access to actual image files.
+# ============================================
+
+# Disable PHP engine in this directory
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Block access to non-image file types
+<FilesMatch "\.(php|phtml|phar|py|pl|cgi|asp|aspx|jsp|sh|bat|exe|sql|html|htm|js|css)$">
+    Require all denied
+</FilesMatch>
+
+# Allow only common image types
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg)$">
+    Require all granted
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set proper content type for images
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    AddType image/webp .webp
+    AddType image/svg+xml .svg
+</IfModule>
