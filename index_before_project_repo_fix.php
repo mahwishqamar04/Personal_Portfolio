@@ -649,4 +649,3 @@ function categoryFilterSlug($category) {
 
 <?php include 'includes/footer.php'; ?>
 
-

@@ -3516,284 +3516,127 @@ footer a:hover {
 }
 
 
- 
-/* =========================================================
-   FINAL LIGHT BLUE + READABLE TEXT DESIGN
-   ========================================================= */
+ /* White background sections - readable dark text */
+.white-bg,
+.light-bg,
+.bg-white,
+.section-light {
+    color: #000000;
+}
 
-/* Main website background */
+.white-bg h1,
+.white-bg h2,
+.white-bg h3,
+.white-bg h4,
+.white-bg h5,
+.white-bg h6,
+.white-bg p,
+.white-bg span,
+.white-bg li,
+.light-bg h1,
+.light-bg h2,
+.light-bg h3,
+.light-bg h4,
+.light-bg h5,
+.light-bg h6,
+.light-bg p,
+.light-bg span,
+.light-bg li,
+.bg-white h1,
+.bg-white h2,
+.bg-white h3,
+.bg-white h4,
+.bg-white h5,
+.bg-white h6,
+.bg-white p,
+.bg-white span,
+.bg-white li,
+.section-light h1,
+.section-light h2,
+.section-light h3,
+.section-light h4,
+.section-light h5,
+.section-light h6,
+.section-light p,
+.section-light span,
+.section-light li {
+    color: #000000;
+}
+
+ /* ===== Soft Light Blue Website Background ===== */
 body {
     background-color: #EAF4FF;
 }
 
-/* Light sections */
-section:not(#home) {
+section,
+.section,
+.bg-white,
+.white-bg,
+.light-bg,
+.section-light {
     background-color: #EAF4FF;
 }
 
-/* Main section headings */
-.section-title {
-    color: #111827 !important;
-    -webkit-text-fill-color: #111827 !important;
+
+
+
+/* ===== About, Services & Experience Headings ===== */
+#about h1,
+#about h2,
+#about h3,
+#services h1,
+#services h2,
+#services h3,
+#experience h1,
+#experience h2,
+#experience h3 {
+    color: #000000 !important;
+}
+
+
+/* ===== About, Services & Experience Section Headings ===== */
+#about .section-header .section-title,
+#services .section-header .section-title,
+#experience .section-header .section-title {
+    color: #000000 !important;
+}
+
+
+/* ===== FINAL BLACK HEADINGS FIX ===== */
+section#about h2.section-title,
+section#services h2.section-title,
+section#experience h2.section-title {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+
+/* ===== BLACK SECTION HEADINGS ===== */
+section#about h2.section-title,
+section#services h2.section-title,
+section#experience h2.section-title {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
     background: none !important;
     background-clip: initial !important;
     -webkit-background-clip: initial !important;
 }
 
-/* Section subtitles */
-.section-subtitle {
-    color: #475569 !important;
+
+/* ===== BLACK SECTION HEADINGS ===== */
+section#about h2.section-title,
+section#services h2.section-title,
+section#experience h2.section-title {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    background: none !important;
+    background-clip: initial !important;
+    -webkit-background-clip: initial !important;
 }
 
-/* Headings inside light sections */
-section:not(#home) > .container h2.section-title {
-    color: #111827 !important;
-    -webkit-text-fill-color: #111827 !important;
-}
 
-/* About text */
-#about .about-content p {
-    color: #334155;
-}
+/* TEST */
+#about .section-title { color: red !important; }
 
-#about .info-label {
-    color: #111827 !important;
-}
-
-#about .info-value {
-    color: #475569 !important;
-}
-
-/* Services cards */
-.service-card {
-    background-color: #ffffff;
-}
-
-.service-card h4 {
-    color: #111827 !important;
-}
-
-.service-card p {
-    color: #475569 !important;
-}
-
-/* Experience cards */
-.timeline-content {
-    background-color: #ffffff;
-}
-
-.timeline-content h4 {
-    color: #111827 !important;
-}
-
-.timeline-content ul li {
-    color: #475569 !important;
-}
-
-/* Skills cards */
-.skill-category {
-    background-color: #ffffff;
-}
-
-.skill-category-title {
-    color: #111827 !important;
-}
-
-/* Project cards */
-.project-card {
-    background-color: #ffffff;
-}
-
-.project-body h4 {
-    color: #111827 !important;
-}
-
-.project-body p {
-    color: #475569 !important;
-}
-
-.project-features li {
-    color: #334155 !important;
-}
-
-/* Certification cards */
-.cert-card {
-    background-color: #ffffff;
-}
-
-.cert-card h5 {
-    color: #111827 !important;
-}
-
-/* Blog cards */
-.blog-card {
-    background-color: #ffffff;
-}
-
-.blog-body h5 {
-    color: #111827 !important;
-}
-
-.blog-body p {
-    color: #475569 !important;
-}
-
-/* Achievement cards */
-.achievement-card {
-    background-color: #ffffff;
-}
-
-.achievement-card h5 {
-    color: #111827 !important;
-}
-
-.achievement-card p {
-    color: #475569 !important;
-}
-
-/* Contact cards */
-.contact-info-card,
-.contact-form {
-    background-color: #ffffff;
-}
-
-.contact-info-text h5,
-.contact-form-title,
-.contact-intro-name {
-    color: #111827 !important;
-}
-
-.contact-info-text p,
-.contact-intro-title {
-    color: #475569 !important;
-}
-
-/* Keep hero dark and readable */
-#home {
-    color: #ffffff;
-}
-
-#home h1,
-#home h2,
-#home h3,
-#home h4,
-#home h5,
-#home h6 {
-    color: #ffffff;
-}
-
-/* Keep dark navbar readable */
-#mainNav,
-#mainNav h1,
-#mainNav h2,
-#mainNav h3,
-#mainNav h4,
-#mainNav h5,
-#mainNav h6 {
-    color: #ffffff;
-}
-
-/* Keep footer readable */
-.site-footer,
-.site-footer h1,
-.site-footer h2,
-.site-footer h3,
-.site-footer h4,
-.site-footer h5,
-.site-footer h6 {
-    color: #ffffff;
-}
-
-/* =========================================================
-   STEP 12 — PREMIUM CARD + SPACING POLISH
-   ========================================================= */
-
-/* Consistent section spacing */
-section:not(#home) {
-    padding-top: 80px;
-    padding-bottom: 80px;
-}
-
-/* Clean section headers */
-.section-header {
-    margin-bottom: 45px;
-}
-
-.section-title {
-    font-weight: 700 !important;
-    letter-spacing: -0.3px;
-}
-
-.section-subtitle {
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.7;
-}
-
-/* Premium white cards */
-.service-card,
-.timeline-content,
-.skill-category,
-.project-card,
-.cert-card,
-.blog-card,
-.achievement-card,
-.contact-info-card,
-.contact-form {
-    border: 1px solid rgba(148, 163, 184, 0.18);
-    border-radius: 18px;
-    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-/* Smooth card hover */
-.service-card:hover,
-.skill-category:hover,
-.project-card:hover,
-.cert-card:hover,
-.blog-card:hover,
-.achievement-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.10);
-}
-
-/* Better card text spacing */
-.service-card p,
-.project-body p,
-.blog-body p,
-.achievement-card p {
-    line-height: 1.7;
-}
-
-/* Project card image polish */
-.project-card img {
-    border-radius: 18px 18px 0 0;
-}
-
-/* Buttons */
-.btn {
-    border-radius: 10px;
-    transition: all 0.2s ease;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-}
-
-/* Keep hero untouched except smooth appearance */
-#home {
-    position: relative;
-}
-
-/* Mobile spacing */
-@media (max-width: 768px) {
-    section:not(#home) {
-        padding-top: 60px;
-        padding-bottom: 60px;
-    }
-
-    .section-header {
-        margin-bottom: 32px;
-    }
-}
+/* CSS LOAD TEST */
+body { outline: 10px solid red !important; }

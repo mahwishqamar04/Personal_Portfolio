@@ -32,7 +32,7 @@ UPDATE `projects` SET
     `category` = 'AI Web Development',
     `thumbnail` = 'assets/images/projects/thumbnails/bizguard-ai.png',
     `live_demo_url` = NULL,
-    `github_url` = 'https://github.com/mahwishqamar04/BizGuard-AI',
+    `github_url` = 'https://github.com/mahwishqamar04',
     `status` = 'active',
     `display_order` = 2,
     `updated_at` = NOW()
@@ -47,7 +47,7 @@ UPDATE `projects` SET
     `category` = 'AI Web Development',
     `thumbnail` = 'assets/images/projects/thumbnails/mil-gaya-ai.png',
     `live_demo_url` = NULL,
-    `github_url` = 'https://github.com/mahwishqamar04/MilGaya-AI',
+    `github_url` = 'https://github.com/mahwishqamar04',
     `status` = 'active',
     `display_order` = 4,
     `updated_at` = NOW()
@@ -78,7 +78,7 @@ VALUES (
     'AI Web Development,PHP,MySQL,JavaScript,HTML,CSS',
     'AI Web Development',
     'assets/images/projects/thumbnails/bizguard-ai-winner.png',
-    'https://github.com/mahwishqamar04/BizGuard-AI-Winner',
+    'https://github.com/mahwishqamar04',
     NULL,
     'active',
     3,
@@ -92,7 +92,3 @@ INSERT INTO `project_screenshots` (`project_id`, `image_path`, `caption`, `displ
 (2, 'assets/images/projects/screenshots/bizguard-ai-dashboard.png', 'BizGuard AI - Dashboard', 2),
 (2, 'assets/images/projects/screenshots/bizguard-ai-features.png', 'BizGuard AI - Features Page', 3),
 (2, 'assets/images/projects/screenshots/bizguard-ai-about.png', 'BizGuard AI - About Page', 4);
-
-
-
-
