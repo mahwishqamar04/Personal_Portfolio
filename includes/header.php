@@ -52,6 +52,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'Mehwish Qamar | Data Analyst & AI
                 <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
                 <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin/">Admin</a></li>
                 <li class="nav-item"><a class="nav-link btn-ai-assistant" href="#ai-assistant"><i class="bi bi-robot"></i> AI Assistant</a></li>
             </ul>
         </div>
