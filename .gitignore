@@ -1,4 +1,4 @@
-﻿.env
+.env
 .env.*
 !.env.example
 
@@ -28,3 +28,9 @@ Thumbs.db
 # Temporary files
 *.log
 *.tmp
+
+# Admin temporary / backup files
+*.backup
+*.backups
+admin/setup/
+admin/projects/*-output.html

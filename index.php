@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $pageTitle = 'Mehwish Qamar | Data Analyst & Business Intelligence';
 include 'includes/header.php';
 
@@ -8,7 +8,26 @@ $projects = [];
 $categories = [];
 $screenshots = [];
 $projectCount = 0;
+$profileImage = 'assets/images/profile/profile-freelancer.jpg';
+
 $conn = getDBConnection();
+
+if ($conn) {
+    // Load the current profile image from the profile table.
+    $profileStmt = $conn->prepare("SELECT profile_image FROM profile ORDER BY id ASC LIMIT 1");
+
+    if ($profileStmt) {
+        $profileStmt->execute();
+        $profileResult = $profileStmt->get_result();
+        $profileRow = $profileResult->fetch_assoc();
+
+        if ($profileRow && !empty($profileRow['profile_image'])) {
+            $profileImage = $profileRow['profile_image'];
+        }
+
+        $profileStmt->close();
+    }
+}
 if ($conn) {
     // Get active projects ordered by display_order
     $stmt = $conn->prepare("SELECT * FROM projects WHERE status = 'active' ORDER BY display_order ASC, id ASC");
@@ -60,7 +79,7 @@ function categoryFilterSlug($category) {
         <div class="row align-items-center">
             <div class="col-lg-7">
                 <div class="hero-content">
-                    <p class="hero-greeting">Data Analyst · BI Enthusiast · AI Web Developer</p>
+                    <p class="hero-greeting">Data Analyst Â· BI Enthusiast Â· AI Web Developer</p>
                     <h1 class="hero-name"><span class="highlight">Mehwish Qamar</span></h1>
                     <p class="hero-title">Data Analyst | Business Intelligence Enthusiast | AI Web Developer</p>
                     <div class="hero-tags">
@@ -97,7 +116,7 @@ function categoryFilterSlug($category) {
             <div class="col-lg-5">
                 <div class="hero-image-wrapper">
                     <div class="hero-image-placeholder">
-                        <img src="assets/images/profile/profile-freelancer.jpg" alt="Mehwish Qamar - Data Analyst & AI Web Developer" class="hero-profile-img">
+                        <img src="<?= htmlspecialchars($profileImage, ENT_QUOTES, 'UTF-8') ?>" alt="Mehwish Qamar - Data Analyst & AI Web Developer" class="hero-profile-img">
                     </div>
                 </div>
             </div>
@@ -116,7 +135,7 @@ function categoryFilterSlug($category) {
             <div class="col-lg-8 mx-auto">
                 <div class="about-content">
                     <p>
-                        I am <strong>Mehwish Qamar</strong> — a <strong>Bachelor of Commerce</strong> graduate from the 
+                        I am <strong>Mehwish Qamar</strong> â€” a <strong>Bachelor of Commerce</strong> graduate from the 
                         <strong>University of Karachi</strong>. My professional focus spans <strong>Data Analytics</strong>, 
                         <strong>Business Intelligence</strong>, and <strong>AI Web Development</strong>. I am building 
                         hands-on experience through projects involving <strong>Power BI dashboards</strong>, 
@@ -127,7 +146,7 @@ function categoryFilterSlug($category) {
                             <i class="bi bi-mortarboard-fill"></i>
                             <div>
                                 <span class="info-label">Education</span><br>
-                                <span class="info-value">B.Com — University of Karachi</span>
+                                <span class="info-value">B.Com â€” University of Karachi</span>
                             </div>
                         </div>
                         <div class="about-info-item">
@@ -239,7 +258,7 @@ function categoryFilterSlug($category) {
                         <i class="bi bi-robot"></i>
                     </div>
                     <h4>AI Web Development</h4>
-                    <p>Developing web applications with AI-focused features using PHP, JavaScript, and MySQL — combining modern technologies with practical, intelligent functionality.</p>
+                    <p>Developing web applications with AI-focused features using PHP, JavaScript, and MySQL â€” combining modern technologies with practical, intelligent functionality.</p>
                     <div class="service-tech">
                         <span>PHP</span>
                         <span>JavaScript</span>
