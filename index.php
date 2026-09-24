@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $pageTitle = 'Mehwish Qamar | Data Analyst & Business Intelligence';
 include 'includes/header.php';
 
@@ -79,9 +79,8 @@ function categoryFilterSlug($category) {
         <div class="row align-items-center">
             <div class="col-lg-7">
                 <div class="hero-content">
-                    <p class="hero-greeting">Data Analyst | BI Enthusiast | AI Web Developer</p>
                     <h1 class="hero-name"><span class="highlight">Mehwish Qamar</span></h1>
-                    <p class="hero-title">Data Analyst | Business Intelligence Enthusiast | AI Web Developer</p>
+                    <p class="hero-title">Data Analyst | Business Intelligence Expert | AI Web Developer</p>
                     <div class="hero-tags">
                         <span class="hero-tag">Data Analytics</span>
                         <span class="hero-tag">Power BI Dashboards</span>
@@ -135,18 +134,18 @@ function categoryFilterSlug($category) {
             <div class="col-lg-8 mx-auto">
                 <div class="about-content">
                     <p>
-                        I am <strong>Mehwish Qamar</strong> ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â a <strong>Bachelor of Commerce</strong> graduate from the 
-                        <strong>University of Karachi</strong>. My professional focus spans <strong>Data Analytics</strong>, 
-                        <strong>Business Intelligence</strong>, and <strong>AI Web Development</strong>. I am building 
-                        hands-on experience through projects involving <strong>Power BI dashboards</strong>, 
-                        <strong>PHP and MySQL web applications</strong>, and <strong>AI-powered features</strong>.
-                    </p>
+    I am <strong>Mehwish Qamar</strong> - a <strong>Bachelor of Commerce</strong> graduate from the
+    <strong>University of Karachi</strong>. My professional focus spans <strong>Data Analytics</strong>,
+    <strong>Business Intelligence</strong>, and <strong>AI Web Development</strong>. I am building
+    hands-on experience through projects involving <strong>Power BI dashboards</strong>,
+    <strong>PHP and MySQL web applications</strong>, and <strong>AI-powered features</strong>.
+</p>
                     <div class="about-info-grid">
                         <div class="about-info-item">
                             <i class="bi bi-mortarboard-fill"></i>
                             <div>
                                 <span class="info-label">Education</span><br>
-                                <span class="info-value">B.Com ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â University of Karachi</span>
+                                <span class="info-value">B.Com - University of Karachi</span>
                             </div>
                         </div>
                         <div class="about-info-item">
@@ -160,7 +159,7 @@ function categoryFilterSlug($category) {
                             <i class="bi bi-geo-alt-fill"></i>
                             <div>
                                 <span class="info-label">Focus Areas</span><br>
-                                <span class="info-value">Data Analytics, Power BI, AI Web Dev</span>
+                                <span class="info-value">Data Analytics, Power BI, AI Web Development</span>
                             </div>
                         </div>
                         <div class="about-info-item">
@@ -258,7 +257,7 @@ function categoryFilterSlug($category) {
                         <i class="bi bi-robot"></i>
                     </div>
                     <h4>AI Web Development</h4>
-                    <p>Developing web applications with AI-focused features using PHP, JavaScript, and MySQL ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â combining modern technologies with practical, intelligent functionality.</p>
+                    <p>Developing web applications with AI-focused features using PHP, JavaScript, and MySQL technologies with practical, intelligent functionality.</p>
                     <div class="service-tech">
                         <span>PHP</span>
                         <span>JavaScript</span>
@@ -572,7 +571,7 @@ function categoryFilterSlug($category) {
         <!-- Contact Intro -->
         <div class="contact-intro text-center mb-5">
             <h4 class="contact-intro-name">Mehwish Qamar</h4>
-            <p class="contact-intro-title">Data Analyst | Business Intelligence Enthusiast | AI Web Developer</p>
+            <p class="contact-intro-title">Data Analyst | Business Intelligence Expert | AI Web Developer</p>
         </div>
 
         <div class="row g-4">
@@ -667,5 +666,11 @@ function categoryFilterSlug($category) {
 </section>
 
 <?php include 'includes/footer.php'; ?>
+
+
+
+
+
+
 
 
