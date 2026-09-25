@@ -16,11 +16,7 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
-/*
-|--------------------------------------------------------------------------
-| Load current profile
-|--------------------------------------------------------------------------
-*/
+/* Load current profile */
 $profile = null;
 
 $result = $db->query(
@@ -39,11 +35,7 @@ if (!$profile) {
     $error = 'No profile record was found in the database.';
 }
 
-/*
-|--------------------------------------------------------------------------
-| Upload new profile picture
-|--------------------------------------------------------------------------
-*/
+/* Upload new profile picture */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $profile) {
 
     if (
@@ -104,12 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $profile) {
 
                 if ($stmt->execute()) {
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Remove previous profile image only if it was inside
-                    | the portfolio profile-image directory.
-                    |--------------------------------------------------------------------------
-                    */
+                    /* Remove previous profile image only if it belongs
+                       to the portfolio profile-image directory. */
                     $oldImage = (string) ($profile['profile_image'] ?? '');
 
                     if (
@@ -128,7 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $profile) {
 
                     $profile['profile_image'] = $newImagePath;
                     $message = 'Profile picture updated successfully.';
-
                 } else {
 
                     if (is_file($destination)) {
@@ -218,10 +205,66 @@ h1 {
     border: 5px solid #eee;
 }
 
-label {
+.crop-section {
+    display: none;
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+}
+
+.crop-section.active {
     display: block;
+}
+
+.crop-area {
+    width: 320px;
+    height: 320px;
+    margin: 20px auto;
+    position: relative;
+    overflow: hidden;
+    background: #ddd;
+    border-radius: 50%;
+    border: 5px solid #222;
+}
+
+.crop-area img {
+    position: absolute;
+    max-width: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: grab;
+}
+
+.crop-area img:active {
+    cursor: grabbing;
+}
+
+.crop-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 9999px rgba(0,0,0,.12);
+    pointer-events: none;
+}
+
+.controls {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.control-row {
+    margin: 15px 0;
+}
+
+.control-row label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
     font-weight: 600;
-    margin-bottom: 8px;
+}
+
+input[type="range"] {
+    width: 100%;
 }
 
 input[type="file"] {
@@ -232,14 +275,29 @@ input[type="file"] {
     border-radius: 6px;
 }
 
-.submit-button {
-    margin-top: 18px;
+.button-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.submit-button,
+.reset-button {
     padding: 11px 18px;
     border: 0;
     border-radius: 6px;
-    background: #222;
     color: #fff;
     cursor: pointer;
+}
+
+.submit-button {
+    background: #222;
+}
+
+.reset-button {
+    background: #666;
 }
 
 .message {
@@ -263,6 +321,13 @@ input[type="file"] {
     font-size: 14px;
     margin-top: 10px;
 }
+
+.crop-info {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
 </style>
 </head>
 
@@ -273,7 +338,7 @@ input[type="file"] {
 <h1>Manage Profile Picture</h1>
 
 <p class="subtitle">
-Change the profile picture displayed on your portfolio.
+    Upload your profile picture and adjust the position and zoom before saving.
 </p>
 
 <div class="top-actions">
@@ -298,26 +363,26 @@ Change the profile picture displayed on your portfolio.
 <h2>Current Profile Picture</h2>
 
 <div class="current-image">
-
 <?php if (!empty($profile['profile_image'])): ?>
 
 <img
     src="../../<?= e($profile['profile_image']) ?>"
-    alt="Current Profile Picture"
->
+    alt="Current Profile Picture">
 
 <?php else: ?>
 
 <p>No profile picture is currently set.</p>
 
 <?php endif; ?>
-
 </div>
 
-<form method="POST" enctype="multipart/form-data">
+<form
+    method="POST"
+    enctype="multipart/form-data"
+    id="profileForm">
 
 <label for="profile_image">
-Choose New Profile Picture
+    Choose New Profile Picture
 </label>
 
 <input
@@ -325,22 +390,360 @@ Choose New Profile Picture
     id="profile_image"
     name="profile_image"
     accept=".jpg,.jpeg,.png,.webp"
-    required
->
+    required>
 
 <p class="info">
-Maximum size: 5 MB. Allowed formats: JPG, JPEG, PNG and WebP.
+    Maximum size: 5 MB. Allowed formats: JPG, JPEG, PNG and WebP.
 </p>
 
-<button type="submit" class="submit-button">
-Update Profile Picture
+<div class="crop-section" id="cropSection">
+
+<h2>Adjust Your Picture</h2>
+
+<p class="crop-info">
+    Drag the image inside the circle to change its position.
+    Use the zoom slider to control how much of the image is visible.
+</p>
+
+<div class="crop-area" id="cropArea">
+
+<img id="cropImage" src="" alt="Crop Preview">
+
+<div class="crop-overlay"></div>
+
+</div>
+
+<div class="controls">
+
+<div class="control-row">
+<label for="zoom">
+    <span>Zoom</span>
+    <span id="zoomValue">100%</span>
+</label>
+
+<input
+    type="range"
+    id="zoom"
+    min="100"
+    max="300"
+    value="100"
+    step="1">
+</div>
+
+</div>
+
+<div class="button-row">
+
+<button
+    type="button"
+    class="reset-button"
+    id="resetCrop">
+    Reset Position
 </button>
+
+<button
+    type="submit"
+    class="submit-button"
+    id="saveButton">
+    Save Adjusted Picture
+</button>
+
+</div>
+
+</div>
 
 </form>
 
 </div>
 
 </div>
+
+<script>
+const fileInput = document.getElementById('profile_image');
+const cropSection = document.getElementById('cropSection');
+const cropArea = document.getElementById('cropArea');
+const cropImage = document.getElementById('cropImage');
+const zoomSlider = document.getElementById('zoom');
+const zoomValue = document.getElementById('zoomValue');
+const resetCrop = document.getElementById('resetCrop');
+const profileForm = document.getElementById('profileForm');
+
+let imageWidth = 0;
+let imageHeight = 0;
+
+let baseWidth = 0;
+let baseHeight = 0;
+
+let scale = 1;
+let posX = 0;
+let posY = 0;
+
+let startX = 0;
+let startY = 0;
+let dragging = false;
+
+const cropSize = 320;
+
+/* Select image */
+fileInput.addEventListener('change', function () {
+
+    const file = this.files[0];
+
+    if (!file) {
+        cropSection.classList.remove('active');
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Profile picture must be 5 MB or smaller.');
+        this.value = '';
+        cropSection.classList.remove('active');
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+
+        cropImage.onload = function () {
+
+            imageWidth = cropImage.naturalWidth;
+            imageHeight = cropImage.naturalHeight;
+
+            /* Cover the circular crop area */
+            const coverScale = Math.max(
+                cropSize / imageWidth,
+                cropSize / imageHeight
+            );
+
+            baseWidth = imageWidth * coverScale;
+            baseHeight = imageHeight * coverScale;
+
+            scale = 1;
+
+            posX = (cropSize - baseWidth) / 2;
+            posY = (cropSize - baseHeight) / 2;
+
+            zoomSlider.value = 100;
+            zoomValue.textContent = '100%';
+
+            updateImage();
+
+            cropSection.classList.add('active');
+        };
+
+        cropImage.src = event.target.result;
+    };
+
+    reader.readAsDataURL(file);
+});
+
+/* Update image position and zoom */
+function updateImage() {
+
+    const width = baseWidth * scale;
+    const height = baseHeight * scale;
+
+    cropImage.style.width = width + 'px';
+    cropImage.style.height = height + 'px';
+
+    cropImage.style.left = posX + 'px';
+    cropImage.style.top = posY + 'px';
+}
+
+/* Zoom */
+zoomSlider.addEventListener('input', function () {
+
+    const oldScale = scale;
+
+    scale = Number(this.value) / 100;
+
+    const centerX = cropSize / 2;
+    const centerY = cropSize / 2;
+
+    const oldWidth = baseWidth * oldScale;
+    const oldHeight = baseHeight * oldScale;
+
+    const imageCenterX = posX + oldWidth / 2;
+    const imageCenterY = posY + oldHeight / 2;
+
+    const relativeX = imageCenterX - centerX;
+    const relativeY = imageCenterY - centerY;
+
+    posX = centerX + relativeX * (scale / oldScale) - (baseWidth * scale) / 2;
+    posY = centerY + relativeY * (scale / oldScale) - (baseHeight * scale) / 2;
+
+    zoomValue.textContent = this.value + '%';
+
+    keepImageInsideCrop();
+    updateImage();
+});
+
+/* Mouse dragging */
+cropImage.addEventListener('mousedown', function (event) {
+
+    event.preventDefault();
+
+    dragging = true;
+
+    startX = event.clientX - posX;
+    startY = event.clientY - posY;
+});
+
+document.addEventListener('mousemove', function (event) {
+
+    if (!dragging) {
+        return;
+    }
+
+    posX = event.clientX - startX;
+    posY = event.clientY - startY;
+
+    keepImageInsideCrop();
+    updateImage();
+});
+
+document.addEventListener('mouseup', function () {
+    dragging = false;
+});
+
+/* Touch dragging */
+cropImage.addEventListener('touchstart', function (event) {
+
+    const touch = event.touches[0];
+
+    dragging = true;
+
+    startX = touch.clientX - posX;
+    startY = touch.clientY - posY;
+}, { passive: true });
+
+document.addEventListener('touchmove', function (event) {
+
+    if (!dragging) {
+        return;
+    }
+
+    const touch = event.touches[0];
+
+    posX = touch.clientX - startX;
+    posY = touch.clientY - startY;
+
+    keepImageInsideCrop();
+    updateImage();
+
+}, { passive: true });
+
+document.addEventListener('touchend', function () {
+    dragging = false;
+});
+
+/* Prevent empty space inside crop */
+function keepImageInsideCrop() {
+
+    const width = baseWidth * scale;
+    const height = baseHeight * scale;
+
+    if (width <= cropSize) {
+        posX = (cropSize - width) / 2;
+    } else {
+        if (posX > 0) {
+            posX = 0;
+        }
+
+        if (posX + width < cropSize) {
+            posX = cropSize - width;
+        }
+    }
+
+    if (height <= cropSize) {
+        posY = (cropSize - height) / 2;
+    } else {
+        if (posY > 0) {
+            posY = 0;
+        }
+
+        if (posY + height < cropSize) {
+            posY = cropSize - height;
+        }
+    }
+}
+
+/* Reset */
+resetCrop.addEventListener('click', function () {
+
+    scale = 1;
+
+    posX = (cropSize - baseWidth) / 2;
+    posY = (cropSize - baseHeight) / 2;
+
+    zoomSlider.value = 100;
+    zoomValue.textContent = '100%';
+
+    updateImage();
+});
+
+/* Create final cropped image before submitting */
+profileForm.addEventListener('submit', function (event) {
+
+    if (!fileInput.files.length) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const canvas = document.createElement('canvas');
+
+    canvas.width = 800;
+    canvas.height = 800;
+
+    const ctx = canvas.getContext('2d');
+
+    const finalScale = canvas.width / cropSize;
+
+    const drawX = posX * finalScale;
+    const drawY = posY * finalScale;
+
+    const drawWidth = baseWidth * scale * finalScale;
+    const drawHeight = baseHeight * scale * finalScale;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.drawImage(
+        cropImage,
+        drawX,
+        drawY,
+        drawWidth,
+        drawHeight
+    );
+
+    canvas.toBlob(function (blob) {
+
+        if (!blob) {
+            alert('Unable to prepare the adjusted image.');
+            return;
+        }
+
+        const croppedFile = new File(
+            [blob],
+            'profile-adjusted.jpg',
+            {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+            }
+        );
+
+        const dataTransfer = new DataTransfer();
+
+        dataTransfer.items.add(croppedFile);
+
+        fileInput.files = dataTransfer.files;
+
+        profileForm.submit();
+
+    }, 'image/jpeg', 0.92);
+});
+</script>
 
 </body>
 </html>

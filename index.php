@@ -7,6 +7,7 @@ require_once __DIR__ . '/includes/db.php';
 $projects = [];
 $categories = [];
 $screenshots = [];
+$certificates = [];
 $projectCount = 0;
 $profileImage = 'assets/images/profile/profile-freelancer.jpg';
 
@@ -29,6 +30,16 @@ if ($conn) {
     }
 }
 if ($conn) {
+    // Load certificates from database
+    $certStmt = $conn->prepare("SELECT * FROM certificates ORDER BY id DESC");
+    if ($certStmt) {
+        $certStmt->execute();
+        $certResult = $certStmt->get_result();
+        while ($certRow = $certResult->fetch_assoc()) {
+            $certificates[] = $certRow;
+        }
+        $certStmt->close();
+    }
     // Get active projects ordered by display_order
     $stmt = $conn->prepare("SELECT * FROM projects WHERE status = 'active' ORDER BY display_order ASC, id ASC");
     $stmt->execute();
@@ -524,28 +535,34 @@ function categoryFilterSlug($category) {
         <!-- Certifications -->
         <h5 class="subsection-label"><i class="bi bi-award-fill"></i> Certifications</h5>
         <div class="row g-4">
+<?php if (!empty($certificates)): ?>
+<?php foreach ($certificates as $certificate): ?>
             <div class="col-lg-4 col-md-6">
                 <div class="cert-card">
-                    <div class="cert-icon"><i class="bi bi-award-fill"></i></div>
-                    <h5>Data Analytics & Business Intelligence</h5>
-                    <p class="cert-issuer">DigiSkills.pk</p>
+                    <?php if (!empty($certificate['image'])): ?>
+                        <div class="cert-image-wrapper">
+                            <img src="<?= htmlspecialchars($certificate['image'], ENT_QUOTES, 'UTF-8') ?>"
+                                 alt="<?= htmlspecialchars($certificate['title'], ENT_QUOTES, 'UTF-8') ?>"
+                                 class="cert-image">
+                        </div>
+                    <?php else: ?>
+                        <div class="cert-icon"><i class="bi bi-award-fill"></i></div>
+                    <?php endif; ?>
+
+                    <h5><?= htmlspecialchars($certificate['title'], ENT_QUOTES, 'UTF-8') ?></h5>
+
+                    <?php if (!empty($certificate['organization'])): ?>
+                        <p class="cert-issuer"><?= htmlspecialchars($certificate['organization'], ENT_QUOTES, 'UTF-8') ?></p>
+                    <?php endif; ?>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="cert-card">
-                    <div class="cert-icon"><i class="bi bi-award-fill"></i></div>
-                    <h5>Freelancing</h5>
-                    <p class="cert-issuer">DigiSkills.pk</p>
-                </div>
+<?php endforeach; ?>
+<?php else: ?>
+            <div class="col-12">
+                <p class="text-center">No certifications available yet.</p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="cert-card">
-                    <div class="cert-icon"><i class="bi bi-award-fill"></i></div>
-                    <h5>AI Web Development</h5>
-                    <p class="cert-issuer">DTAN</p>
-                </div>
-            </div>
-        </div>
+<?php endif; ?>
+        </div>        </div>
     </div>
 </section>
 
@@ -666,6 +683,12 @@ function categoryFilterSlug($category) {
 </section>
 
 <?php include 'includes/footer.php'; ?>
+
+
+
+
+
+
 
 
 
