@@ -214,6 +214,10 @@ if ($tableCheck && $tableCheck->num_rows > 0) {
                 Manage Screenshots
             </a>
 
+            <a class="button" href="contact-messages/">
+                Contact Messages
+            </a>
+
             <a class="button secondary" href="../index.php" target="_blank">
                 Open Portfolio
             </a>

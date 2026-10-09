@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $pageTitle = 'Mehwish Qamar | Data Analyst & Business Intelligence';
 include 'includes/header.php';
 
@@ -90,7 +90,7 @@ function categoryFilterSlug($category) {
         <div class="row align-items-center">
             <div class="col-lg-7">
                 <div class="hero-content">
-                    <h1 class="hero-name"><span class="highlight">Mehwish Qamar</span></h1>
+                    <h1 class="hero-name"><span class="hero-intro">I'm</span><span class="highlight">Mehwish Qamar</span></h1>
                     <p class="hero-title">Data Analyst | Business Intelligence Expert | AI Web Developer</p>
                     <div class="hero-tags">
                         <span class="hero-tag">Data Analytics</span>
@@ -553,6 +553,49 @@ function categoryFilterSlug($category) {
 
                     <?php if (!empty($certificate['organization'])): ?>
                         <p class="cert-issuer"><?= htmlspecialchars($certificate['organization'], ENT_QUOTES, 'UTF-8') ?></p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($certificate['image']) || !empty($certificate['pdf'])): ?>
+                        <a href="<?= htmlspecialchars(!empty($certificate['image']) ? $certificate['image'] : $certificate['pdf'], ENT_QUOTES, 'UTF-8') ?>"
+                           class="btn btn-primary btn-sm mt-2"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <i class="bi bi-eye"></i> View Certificate
+                        </a>
+
+                        <div class="modal fade"
+                             id="certificateModal-<?= (int)$certificate['id'] ?>"
+                             tabindex="-1"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <?= htmlspecialchars($certificate['title'], ENT_QUOTES, 'UTF-8') ?>
+                                        </h5>
+                                        <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <?php if (!empty($certificate['image'])): ?>
+                                            <img
+                                                src="<?= htmlspecialchars($certificate['image'], ENT_QUOTES, 'UTF-8') ?>"
+                                                alt="<?= htmlspecialchars($certificate['title'], ENT_QUOTES, 'UTF-8') ?>"
+                                                style="display:block;width:auto;max-width:100%;height:auto;max-height:75vh;object-fit:contain;margin:0 auto;">
+                                        <?php endif; ?>
+
+                                        <?php if (!empty($certificate['pdf'])): ?>
+                                            <iframe
+                                                src="<?= htmlspecialchars($certificate['pdf'], ENT_QUOTES, 'UTF-8') ?>"
+                                                title="Certificate PDF"
+                                                style="display:block;width:100%;height:75vh;min-height:500px;border:0;margin-top:15px;">
+                                            </iframe>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>

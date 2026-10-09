@@ -20,22 +20,37 @@ if (isset($_GET['delete'])) {
     $id = (int) $_GET['delete'];
 
     if ($id > 0) {
-        $stmt = $db->prepare("SELECT image FROM certificates WHERE id = ?");
+        $stmt = $db->prepare(
+            "SELECT image, pdf FROM certificates WHERE id = ?"
+        );
         $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         $certificate = $result->fetch_assoc();
         $stmt->close();
 
-        $stmt = $db->prepare("DELETE FROM certificates WHERE id = ?");
+        $stmt = $db->prepare(
+            "DELETE FROM certificates WHERE id = ?"
+        );
         $stmt->bind_param('i', $id);
 
         if ($stmt->execute()) {
+
             if (!empty($certificate['image'])) {
-                $imagePath = dirname(__DIR__, 2) . '/' . ltrim($certificate['image'], '/');
+                $imagePath = dirname(__DIR__, 2) . '/' .
+                    ltrim($certificate['image'], '/');
 
                 if (is_file($imagePath)) {
                     unlink($imagePath);
+                }
+            }
+
+            if (!empty($certificate['pdf'])) {
+                $pdfPath = dirname(__DIR__, 2) . '/' .
+                    ltrim($certificate['pdf'], '/');
+
+                if (is_file($pdfPath)) {
+                    unlink($pdfPath);
                 }
             }
 
@@ -69,7 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $imagePath = '';
+    $pdfPath = '';
 
+    /*
+     * Certificate image upload
+     */
     if (
         $error === '' &&
         isset($_FILES['image']) &&
@@ -119,34 +138,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    /*
+     * Certificate PDF upload
+     */
+    if (
+        $error === '' &&
+        isset($_FILES['pdf']) &&
+        $_FILES['pdf']['error'] !== UPLOAD_ERR_NO_FILE
+    ) {
+        if ($_FILES['pdf']['error'] !== UPLOAD_ERR_OK) {
+            $error = 'Certificate PDF upload failed.';
+        } elseif ($_FILES['pdf']['size'] > 10 * 1024 * 1024) {
+            $error = 'Certificate PDF must be 10 MB or smaller.';
+        } else {
+            $tmpPdf = $_FILES['pdf']['tmp_name'];
+            $originalPdf = $_FILES['pdf']['name'];
+
+            $pdfExtension = strtolower(
+                pathinfo($originalPdf, PATHINFO_EXTENSION)
+            );
+
+            if ($pdfExtension !== 'pdf') {
+                $error = 'Only PDF files are allowed.';
+            } else {
+                $pdfMime = '';
+
+                if (function_exists('finfo_open')) {
+                    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+                    if ($finfo) {
+                        $pdfMime = finfo_file($finfo, $tmpPdf);
+                        finfo_close($finfo);
+                    }
+                }
+
+                if (
+                    $pdfMime !== '' &&
+                    $pdfMime !== 'application/pdf'
+                ) {
+                    $error = 'The uploaded file is not a valid PDF.';
+                } else {
+                    try {
+                        $pdfRandomName = bin2hex(random_bytes(6));
+                    } catch (Throwable $e) {
+                        $pdfRandomName = uniqid();
+                    }
+
+                    $pdfFileName =
+                        'certificate_' .
+                        date('Ymd_His') .
+                        '_' .
+                        $pdfRandomName .
+                        '.pdf';
+
+                    $pdfDestination = $uploadDir . $pdfFileName;
+
+                    if (move_uploaded_file($tmpPdf, $pdfDestination)) {
+                        $pdfPath = $uploadWebPath . $pdfFileName;
+                    } else {
+                        $error = 'Unable to save the certificate PDF.';
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+     * Insert certificate
+     */
     if ($error === '') {
         $stmt = $db->prepare(
             "INSERT INTO certificates
-            (title, organization, certificate_date, certificate_url, image)
-            VALUES (?, ?, NULLIF(?, ''), ?, ?)"
+            (title, organization, certificate_date, certificate_url, image, pdf)
+            VALUES (?, ?, NULLIF(?, ''), ?, ?, ?)"
         );
 
         $stmt->bind_param(
-            'sssss',
+            'ssssss',
             $title,
             $organization,
             $certificateDate,
             $certificateUrl,
-            $imagePath
+            $imagePath,
+            $pdfPath
         );
 
         if ($stmt->execute()) {
             $message = 'Certificate added successfully.';
+
             $title = '';
             $organization = '';
             $certificateDate = '';
             $certificateUrl = '';
         } else {
+
             if ($imagePath !== '') {
-                $savedImage = dirname(__DIR__, 2) . '/' . $imagePath;
+                $savedImage =
+                    dirname(__DIR__, 2) . '/' . $imagePath;
 
                 if (is_file($savedImage)) {
                     unlink($savedImage);
+                }
+            }
+
+            if ($pdfPath !== '') {
+                $savedPdf =
+                    dirname(__DIR__, 2) . '/' . $pdfPath;
+
+                if (is_file($savedPdf)) {
+                    unlink($savedPdf);
                 }
             }
 
@@ -155,13 +255,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->close();
     }
+
+    /*
+     * If validation fails after image upload,
+     * remove the already-uploaded image.
+     */
+    if ($error !== '' && $imagePath !== '') {
+        $savedImage =
+            dirname(__DIR__, 2) . '/' . $imagePath;
+
+        if (is_file($savedImage)) {
+            unlink($savedImage);
+        }
+    }
+
+    /*
+     * If validation fails after PDF upload,
+     * remove the already-uploaded PDF.
+     */
+    if ($error !== '' && $pdfPath !== '') {
+        $savedPdf =
+            dirname(__DIR__, 2) . '/' . $pdfPath;
+
+        if (is_file($savedPdf)) {
+            unlink($savedPdf);
+        }
+    }
 }
 
 $certificates = [];
 
 $result = $db->query(
     "SELECT id, title, organization, certificate_date,
-            certificate_url, image, created_at
+            certificate_url, image, pdf, created_at
      FROM certificates
      ORDER BY certificate_date DESC, id DESC"
 );
@@ -304,6 +430,17 @@ input {
     color: #555;
 }
 
+.pdf-link {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background: #eaf4ff;
+    color: #1769aa;
+    text-decoration: none;
+    font-weight: 600;
+}
+
 .delete-button {
     display: inline-block;
     margin-top: 10px;
@@ -315,6 +452,10 @@ input {
 }
 
 .empty {
+    color: #666;
+}
+
+small {
     color: #666;
 }
 </style>
@@ -398,6 +539,18 @@ Add and manage your professional certificates.
 Maximum size: 5 MB. Allowed: JPG, JPEG, PNG, WebP.
 </small>
 
+<label for="pdf">Certificate PDF</label>
+<input
+    type="file"
+    id="pdf"
+    name="pdf"
+    accept=".pdf,application/pdf"
+>
+
+<small>
+Maximum size: 10 MB. Allowed: PDF only.
+</small>
+
 <br>
 
 <button type="submit" class="submit-button">
@@ -460,6 +613,19 @@ Add Certificate
     rel="noopener noreferrer"
 >
 View Certificate
+</a>
+</p>
+<?php endif; ?>
+
+<?php if (!empty($certificate['pdf'])): ?>
+<p>
+<a
+    class="pdf-link"
+    href="../../<?= e($certificate['pdf']) ?>"
+    target="_blank"
+    rel="noopener noreferrer"
+>
+📄 View PDF Certificate
 </a>
 </p>
 <?php endif; ?>
